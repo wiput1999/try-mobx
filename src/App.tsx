@@ -1,26 +1,32 @@
-import React from 'react'
-import logo from './logo.svg'
+import React, { Component } from 'react'
 import './App.css'
+import { observer, inject } from 'mobx-react'
+import { MobxStoreInterface } from './store/mobxStore'
 
-const App: React.FC = () => {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  )
+interface AppProps {
+  mobxStore?: MobxStoreInterface
+}
+
+@inject('mobxStore')
+@observer
+class App extends Component<AppProps> {
+  render() {
+    const { greeting } = this.props.mobxStore!
+
+    return (
+      <div className="App">
+        <header className="App-header">
+          {greeting}
+          <button onClick={this.clickHandler}>Change Greeting</button>
+        </header>
+      </div>
+    )
+  }
+
+  private clickHandler = () => {
+    const { setName } = this.props.mobxStore!
+    setName('Bob')
+  }
 }
 
 export default App
